@@ -1,12 +1,9 @@
-
-
 function App() {
-
   return (
     <div className="App">
-      MERN app
+      <div className="text-xl font-bold">MERN app</div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
