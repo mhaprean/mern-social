@@ -16,7 +16,7 @@ const signJWTRefreshToken = (userId: string, role = 'user') => {
   });
 };
 
-export const register = async (req: Request, res: Response, next: NextFunction) => {
+export const register = async (req: Request, res: Response) => {
   try {
     const joiSchema = Joi.object({
       name: Joi.string().min(1).max(60).required(),
@@ -101,7 +101,7 @@ export const profile = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export const confirmAccount = async (req: Request, res: Response, next: NextFunction) => {
+export const confirmAccount = async (req: Request, res: Response) => {
   try {
     const joiSchema = Joi.object({
       userId: Joi.string().required(),
@@ -133,7 +133,7 @@ export const confirmAccount = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
+export const refreshToken = async (req: Request, res: Response) => {
   const cookies = req.cookies;
   if (!cookies?.jwt_refresh_token) return res.status(401).json('No refresh token found. Please login again');
 
@@ -161,7 +161,7 @@ export const refreshToken = async (req: Request, res: Response, next: NextFuncti
   });
 };
 
-export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const joiSchema = Joi.object({
       email: Joi.string().email().required(),
@@ -193,7 +193,7 @@ export const forgotPassword = async (req: Request, res: Response, next: NextFunc
   }
 };
 
-export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+export const resetPassword = async (req: Request, res: Response) => {
   try {
     const joiSchema = Joi.object({
       userId: Joi.string().required(),
