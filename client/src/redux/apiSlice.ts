@@ -2,6 +2,15 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { IUser } from './authSlice';
 import { RootState } from './store';
 
+export interface IPost {
+  id: string;
+  content: string;
+  image?: string;
+  user: string;
+  createdAt?: string;
+  updatedAt?: string;
+  likes: string[];
+}
 
 interface ILoginResponse {
   user: IUser;
@@ -25,6 +34,15 @@ interface IResetPasswordResponse {
   message: string;
 }
 
+interface IAddPostResponse {
+  message: string;
+  post: any;
+}
+
+interface IGetPostsResponse {
+  posts: IPost[];
+}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
 
 export const backendApi = createApi({
@@ -45,6 +63,18 @@ export const backendApi = createApi({
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUser, {}>({
       query: () => 'auth/profile',
+    }),
+
+    getPosts: builder.query<IGetPostsResponse, {}>({
+      query: () => 'posts',
+    }),
+
+    addPost: builder.mutation<IAddPostResponse, { content: string; image?: string }>({
+      query: (data) => ({
+        url: 'posts/add',
+        method: 'POST',
+        body: data,
+      }),
     }),
 
     loginUser: builder.mutation<ILoginResponse, { data: Partial<IUser> }>({
@@ -95,6 +125,8 @@ export const {
   useConfirmAccountMutation,
   useForgotPasswordMutation,
   useResetPasswordMutation,
+  useAddPostMutation,
+  useGetPostsQuery,
 } = backendApi;
 
 export default backendApi;
