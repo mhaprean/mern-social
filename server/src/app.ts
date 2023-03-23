@@ -7,6 +7,7 @@ import upload, { UploadedFile } from 'express-fileupload';
 
 import { v2 as cloudinary } from 'cloudinary';
 import authRoutes from './routes/authRoutes';
+import postRoutes from './routes/postRoutes';
 
 const app = express();
 dotenv.config();
@@ -32,13 +33,14 @@ app.use(upload());
 
 // routes
 app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
 
 app.post('/api/upload', async (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
   try {
-    let sampleFile = (req as any).files.image;
+    const sampleFile = (req as any).files.image;
 
     const extension = sampleFile.mimetype.split('/')[1];
 
