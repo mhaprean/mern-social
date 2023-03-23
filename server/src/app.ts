@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import upload, { UploadedFile } from 'express-fileupload';
 
 import { v2 as cloudinary } from 'cloudinary';
+import authRoutes from './routes/authRoutes';
 
 const app = express();
 dotenv.config();
@@ -29,19 +30,28 @@ app.use(cookieParser());
 app.use(cors());
 app.use(upload());
 
+// routes
+app.use('/api/auth', authRoutes);
+
 app.post('/api/upload', async (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
   try {
     let sampleFile = (req as any).files.image;
+
+    const extension = sampleFile.mimetype.split('/')[1];
+
+    const name = sampleFile.name.substring(0, sampleFile.name.length - extension.length - 1);
+
     const b64 = Buffer.from(sampleFile.data).toString('base64');
 
     const dataURI = 'data:' + sampleFile.mimetype + ';base64,' + b64;
 
     const uploadedImage = await cloudinary.uploader.upload(dataURI, {
       folder: 'mern-social',
-      public_id: sampleFile.name,
+      // public_id: name,
+      resource_type: 'auto',
     });
 
     return res.status(200).json({ message: 'hello from upload route', uploadedImage: uploadedImage });
