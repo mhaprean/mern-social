@@ -3,6 +3,7 @@ import Navigation from './components/Navigation';
 import Post from './components/Post';
 import Homepage from './pages/Homepage';
 import Login from './pages/Login';
+import MyProfile from './pages/MyProfile';
 
 function App() {
   return (
@@ -14,9 +15,10 @@ function App() {
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/my-profile" element={<MyProfile />} />
+            
           </Routes>
-          <p>MERN app</p>
-          <Post />
+
         </div>
       </div>
     </div>

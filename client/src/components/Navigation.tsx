@@ -1,9 +1,12 @@
-import { XMarkIcon, Bars3BottomRightIcon } from '@heroicons/react/24/solid';
+import { XMarkIcon, Bars3BottomRightIcon, UserCircleIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAppSelector } from '../redux/hooks';
 
 const Navigation = () => {
   const [open, setOpen] = useState(false);
+
+  const authState = useAppSelector((state) => state.auth);
 
   const handleOpen = () => {
     setOpen(!open);
@@ -15,12 +18,25 @@ const Navigation = () => {
           <h2 className="font-bold">MernSocial</h2>
         </Link>
 
-        <Link to="/login" className="ml-auto">
-          <button className="bg-sky-800 hover:bg-sky-900 text-white text-sm font-bold py-1 px-4 rounded mx-2 ">Log in</button>
-        </Link>
-        <button className="bg-transparent hover:bg-sky-800 text-sky-900 text-sm font-bold hover:text-white py-1 px-4 border border-sky-800 hover:border-transparent rounded">
-          Register
-        </button>
+        {!authState.isAuth ? (
+          <>
+            <Link to="/login" className="ml-auto">
+              <button className="bg-sky-800 hover:bg-sky-900 text-white text-sm font-bold py-1 px-4 rounded mx-2 ">Log in</button>
+            </Link>
+            <button className="bg-transparent hover:bg-sky-800 text-sky-900 text-sm font-bold hover:text-white py-1 px-4 border border-sky-800 hover:border-transparent rounded">
+              Register
+            </button>
+          </>
+        ) : (
+          <>
+            <Link to="/my-profile" className="ml-auto">
+              <button className="p-1 rounded-full hover:bg-slate-300 transition-all">
+                <UserCircleIcon className="h-6 w-6" />
+              </button>
+            </Link>
+          </>
+        )}
+
         <button className="hover:bg-slate-300 p-1 rounded-full transition-all sm:hidden ml-1" onClick={handleOpen}>
           {open ? <XMarkIcon className="h-6 w-6" /> : <Bars3BottomRightIcon className="h-6 w-6" />}
         </button>
