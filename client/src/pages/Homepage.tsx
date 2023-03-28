@@ -7,7 +7,7 @@ const Homepage = () => {
   return (
     <div className="py-4">
       <WritePost />
-      {!isLoading && data && data.posts.map((post) => <Post key={post.id} post={post} />)}
+      {!isLoading && data && data.posts.map((post) => <Post key={post._id} post={post} />)}
     </div>
   );
 };

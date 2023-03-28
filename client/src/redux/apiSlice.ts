@@ -3,10 +3,13 @@ import { IUser } from './authSlice';
 import { RootState } from './store';
 
 export interface IPost {
-  id: string;
+  _id: string;
   content: string;
   image?: string;
-  user: string;
+  user: {
+    id: string;
+    name: string;
+  };
   createdAt?: string;
   updatedAt?: string;
   likes: string[];
@@ -43,6 +46,14 @@ interface IGetPostsResponse {
   posts: IPost[];
 }
 
+interface IUploadImageResponse {
+  message: string;
+  uploadedImage: {
+    secure_url: string;
+    resource_type: string;
+  };
+}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
 
 export const backendApi = createApi({
@@ -58,7 +69,7 @@ export const backendApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Quiz', 'Game', 'Result', 'Tournament'],
+  tagTypes: ['Post'],
 
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUser, {}>({
@@ -67,11 +78,21 @@ export const backendApi = createApi({
 
     getPosts: builder.query<IGetPostsResponse, {}>({
       query: () => 'posts',
+      providesTags: ['Post'],
     }),
 
     addPost: builder.mutation<IAddPostResponse, { content: string; image?: string }>({
       query: (data) => ({
         url: 'posts/add',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Post'],
+    }),
+
+    uploadImage: builder.mutation<IUploadImageResponse, FormData>({
+      query: (data) => ({
+        url: 'upload',
         method: 'POST',
         body: data,
       }),
@@ -127,6 +148,7 @@ export const {
   useResetPasswordMutation,
   useAddPostMutation,
   useGetPostsQuery,
+  useUploadImageMutation,
 } = backendApi;
 
 export default backendApi;

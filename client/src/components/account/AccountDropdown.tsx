@@ -1,4 +1,4 @@
-import { UserCircleIcon } from '@heroicons/react/24/solid';
+import { UserCircleIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/solid';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 
 import { clsx } from 'clsx';
@@ -55,7 +55,7 @@ const AccountDropdown = () => {
               )}
               onClick={handleLogout}
             >
-              <UserCircleIcon className="w-5 h-5 mr-2" />
+              <ArrowLeftOnRectangleIcon className="w-5 h-5 mr-2" />
               <span className="flex-grow text-gray-700 dark:text-gray-300">Logout</span>
             </DropdownMenuPrimitive.Item>
           </DropdownMenuPrimitive.Content>
