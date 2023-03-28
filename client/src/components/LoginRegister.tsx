@@ -94,7 +94,7 @@ const LoginRegister = ({ isRegister = false }: IPropsLoginRegister) => {
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="border text-base rounded px-3 py-2 w-full  focus:outline-none focus:ring focus:border-blue-300"
+              className="border text-base rounded px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-300"
               required
             />
           </div>

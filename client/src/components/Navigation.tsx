@@ -2,6 +2,7 @@ import { XMarkIcon, Bars3BottomRightIcon, UserCircleIcon } from '@heroicons/reac
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAppSelector } from '../redux/hooks';
+import AccountDropdown from './account/AccountDropdown';
 
 const Navigation = () => {
   const [open, setOpen] = useState(false);
@@ -22,7 +23,7 @@ const Navigation = () => {
 
   return (
     <div className="fixed top-0 left-0 w-full border shadow-sm h-[55px] flex text-sky-900 bg-white px-2">
-      <div className="max-w-screen-lg m-auto flex items-center w-full">
+      <div className="max-w-xl m-auto flex items-center w-full">
         <Link to="/">
           <h2 className="font-bold">MernSocial</h2>
         </Link>
@@ -39,13 +40,7 @@ const Navigation = () => {
             </Link>
           </>
         ) : (
-          <>
-            <Link to="/my-profile" className="ml-auto">
-              <button className="p-1 rounded-full hover:bg-slate-300 transition-all">
-                <UserCircleIcon className="h-6 w-6" />
-              </button>
-            </Link>
-          </>
+          <AccountDropdown />
         )}
 
         <button className="hover:bg-slate-300 p-1 rounded-full transition-all sm:hidden ml-1" onClick={handleOpen}>

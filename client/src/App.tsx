@@ -14,7 +14,7 @@ function App() {
       <Navigation />
 
       <div className="bg-sky-50 h-full min-h-screen p-2 pt-16">
-        <div className="text-xl max-w-screen-lg m-auto">
+        <div className="max-w-xl m-auto">
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/login" element={<LoginPage />} />
