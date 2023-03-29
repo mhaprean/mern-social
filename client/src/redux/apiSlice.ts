@@ -54,6 +54,10 @@ interface IUploadImageResponse {
   };
 }
 
+interface ILikePostResponse {
+  message: string;
+}
+
 const SERVER_URL = import.meta.env.VITE_SERVER_URL || 'http://localhost:3000';
 
 export const backendApi = createApi({
@@ -87,6 +91,16 @@ export const backendApi = createApi({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['Post'],
+    }),
+
+    likePost: builder.mutation<ILikePostResponse, string>({
+      query(postId) {
+        return {
+          url: `posts/like/${postId}`,
+          method: 'POST',
+        };
+      },
       invalidatesTags: ['Post'],
     }),
 
@@ -149,6 +163,7 @@ export const {
   useAddPostMutation,
   useGetPostsQuery,
   useUploadImageMutation,
+  useLikePostMutation,
 } = backendApi;
 
 export default backendApi;
