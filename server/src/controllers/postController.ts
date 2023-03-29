@@ -29,10 +29,34 @@ export const createPost = async (req: Request<unknown, unknown, IPost>, res: Res
 
 export const getPosts = async (req: Request<unknown, unknown, IPost>, res: Response) => {
   try {
-    const userId = req.userId;
-
-    const posts = await Post.find();
+    const posts = await Post.find().populate('user').sort({ createdAt: -1 });
     return res.status(200).json({ posts });
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+export const likePost = async (req: Request<{ id: string }>, res: Response) => {
+  const id = req.params.id;
+  const userId = req.userId;
+
+  try {
+    const post = await Post.findById(id);
+
+    if (!post) {
+      return res.status(400).json({ message: 'Wrong article id.' });
+    }
+    if (!userId) {
+      return res.status(400).json({ message: 'You are not authenticated.' });
+    }
+
+    if (post.likes.includes(userId)) {
+      const removeLike = await post.updateOne({ $pull: { likes: userId } });
+      return res.status(200).json({ message: 'Like removed from post' });
+    } else {
+      const addLike = await post.updateOne({ $push: { likes: userId } });
+      return res.status(200).json({ message: 'Like added to post' });
+    }
   } catch (error) {
     return res.status(400).json(error);
   }
