@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useLoginUserMutation, useRegisterUserMutation } from '../redux/apiSlice';
 import { login, setUser } from '../redux/authSlice';
 import { useAppDispatch } from '../redux/hooks';
+import Input from './ui/Input';
 
 interface IPropsLoginRegister {
   isRegister?: boolean;
@@ -79,58 +80,18 @@ const LoginRegister = ({ isRegister = false }: IPropsLoginRegister) => {
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md">
+    <div className="flex justify-center items-center ">
+      <form onSubmit={handleSubmit} className="bg-white p-8 rounded shadow-md w-full">
         <h2 className="font-bold mb-6 text-sky-900">{isRegister ? 'Register a new account' : 'Log in to your account'}</h2>
 
-        {isRegister && (
-          <div className="mb-4">
-            <label htmlFor="username" className="block text-gray-800 font-medium mb-2 text-sm">
-              Email
-            </label>
-            <input
-              type="email"
-              id="name"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border text-base rounded px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-300"
-              required
-            />
-          </div>
-        )}
-        <div className="mb-4">
-          <label htmlFor="username" className="block text-gray-800 font-medium mb-2 text-sm">
-            Username
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="border text-base  rounded px-3 py-2 w-full focus:outline-none focus:ring focus:border-blue-300"
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label htmlFor="password" className="block text-gray-800 font-medium mb-2 text-sm">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="border text-base  rounded px-3 py-2 w-full focus:outline-none focus:ring focus:border-sky-800"
-            required
-          />
-        </div>
+        {isRegister && <Input onChange={setEmail} value={email} type={'email'} label={'Email'} name={'email'} />}
+
+        <Input onChange={setUsername} value={username} type={'text'} label={'Username'} name={'username'} />
+        <Input onChange={setPassword} value={password} type={'password'} label={'Password'} name={'password'} />
 
         {!isRegister && (
           <div className="mb-4">
-            <Link to={'/forgot-password'} className="text-sm text-gray-600">
+            <Link to={'/forgot-password'} className="text-sm font-semibold text-gray-600 hover:text-gray-800">
               Forgot password?
             </Link>
           </div>
