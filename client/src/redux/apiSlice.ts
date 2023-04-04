@@ -7,7 +7,7 @@ export interface IPost {
   content: string;
   image?: string;
   user: {
-    id: string;
+    _id: string;
     name: string;
   };
   createdAt?: string;
@@ -80,8 +80,17 @@ export const backendApi = createApi({
       query: () => 'auth/profile',
     }),
 
+    getUser: builder.query<IUser, { id: string }>({
+      query: ({ id }) => `users/${id}`,
+    }),
+
     getPosts: builder.query<IGetPostsResponse, {}>({
       query: () => 'posts',
+      providesTags: ['Post'],
+    }),
+
+    getSinglePost: builder.query<IPost, { postId: string }>({
+      query: ({ postId }) => `posts/${postId}`,
       providesTags: ['Post'],
     }),
 
@@ -164,6 +173,8 @@ export const {
   useGetPostsQuery,
   useUploadImageMutation,
   useLikePostMutation,
+  useGetUserQuery,
+  useGetSinglePostQuery,
 } = backendApi;
 
 export default backendApi;
