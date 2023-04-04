@@ -1,9 +1,15 @@
-import { CameraIcon, VideoCameraIcon, FaceSmileIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { CameraIcon, VideoCameraIcon, FaceSmileIcon, XMarkIcon, GlobeAmericasIcon, PhotoIcon } from '@heroicons/react/24/solid';
+import React, { useState, Fragment, useRef } from 'react';
+import { Dialog, Transition } from '@headlessui/react';
 
-import { useRef, useState } from 'react';
 import { useAddPostMutation, useUploadImageMutation } from '../redux/apiSlice';
+import { useAppSelector } from '../redux/hooks';
 
 const WritePost = () => {
+  const authState = useAppSelector((state) => state.auth);
+
+  const [isOpen, setOpen] = useState(false);
+
   const [text, setText] = useState('');
   const [image, setImage] = useState('');
 
@@ -52,7 +58,7 @@ const WritePost = () => {
     setCurrentFile(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
 
     if (response.isLoading) {
@@ -71,6 +77,7 @@ const WritePost = () => {
         setText('');
         setCurrentFile(null);
         setPreviewImage(null);
+        setOpen(false);
       }
     } catch (error) {
       console.log('!!! error ', error);
@@ -78,8 +85,104 @@ const WritePost = () => {
   };
 
   return (
-    <div className="bg-white rounded shadow-md text-gray-500 font-medium mt-6 mb-6">
-      <form className="flex-grow" onSubmit={handleSubmit}>
+    <>
+      <Transition appear show={isOpen} as={Fragment}>
+        <Dialog as="div" className="relative z-10" onClose={() => setOpen(false)}>
+          <Transition.Child
+            as={Fragment}
+            enter="ease-out duration-300"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in duration-200"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <div className="fixed inset-0 bg-black bg-opacity-25" />
+          </Transition.Child>
+
+          <div className="fixed inset-0 overflow-y-auto">
+            <div className="flex min-h-full items-center justify-center p-4 text-center">
+              <Transition.Child
+                as={Fragment}
+                enter="ease-out duration-300"
+                enterFrom="opacity-0 scale-95 mt-80"
+                enterTo="opacity-100 scale-100 mt-0"
+                leave="ease-in duration-200"
+                leaveFrom="opacity-100 scale-100 mt-0"
+                leaveTo="opacity-0 scale-95 mt-80"
+              >
+                <Dialog.Panel className="w-full max-w-lg max-h-[95vh] transform overflow-hidden rounded-md bg-white p-0 text-left align-middle shadow-xl transition-all">
+                  <Dialog.Title as="div" className="text-lg sticky font-medium leading-6 text-gray-800 border p-2 flex items-center">
+                    <p className="font-bold flex-grow text-center">Write a post</p>
+
+                    <button
+                      onClick={() => setOpen(false)}
+                      className="cursor-pointer bg-slate-200 hover:bg-slate-300 transition-all duration-200  
+                      rounded-full p-1 flex justify-center items-center ml-auto"
+                    >
+                      <XMarkIcon className="w-6 h-6" />
+                    </button>
+                  </Dialog.Title>
+                  <div className="overflow-y-auto max-h-[calc(95vh-50px)] p-4">
+                    <div className="flex items-center space-x-2">
+                      <img
+                        src="https://images.unsplash.com/photo-1670349148055-e11a0b3be242?ixid=MnwxMjA3fDF8MXxhbGx8MXx8fHx8fDJ8fDE2Nzk2MDM0MzA&ixlib=rb-4.0.3&dpr=1&auto=format&fit=crop&w=120&h=200&q=60"
+                        alt="img"
+                        className="rounded-full h-10 w-10"
+                      />
+                      <div className="flex flex-col justify-center">
+                        <p className="font-semibold">{authState.user?.name}</p>
+
+                        <div className="text-xs bg-slate-200 px-1 py-0.5 rounded-md text-gray-500 cursor-pointer flex items-center">
+                          <GlobeAmericasIcon className="w-4 h-4 mr-1" />
+                          <p>Public</p>
+                        </div>
+                      </div>
+                    </div>
+                    <textarea
+                      onChange={(e) => setText(e.target.value)}
+                      value={text}
+                      className="w-full border rounded-md min-h-[60px] p-2 my-4"
+                      placeholder="What's on your mind?"
+                    ></textarea>
+
+                    {previewImage && (
+                      <div className="relative mb-2 rounded-md">
+                        <img className="w-full rounded-md" src={typeof previewImage === 'string' ? previewImage : ''} alt="" />
+                        <button className="absolute top-2 right-2 bg-rose-600 rounded-full font-bold text-white p-1" onClick={removeImage}>
+                          <XMarkIcon className="w-5 h-5" />
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="border p-2 rounded-md mb-4 flex items-center">
+                      <p className="text-sm text-gray-500 mr-auto">Add to your post:</p>
+                      <button
+                        className="h-8 w-8 rounded-full bg-slate-200 hover:bg-slate-300 transition-all duration-200
+                         p-1.5 flex items-center justify-center"
+                        onClick={() => {
+                          if (fileRef) {
+                            fileRef?.current?.click();
+                          }
+                        }}
+                      >
+                        <PhotoIcon className="" />
+                        <input type="file" ref={fileRef} onChange={handleFileChange} hidden />
+                      </button>
+                    </div>
+
+                    <button onClick={handleSubmit} type="submit" className="w-full bg-sky-800 text-white p-2 rounded-md hover:bg-sky-900">
+                      Create post
+                    </button>
+                  </div>
+                </Dialog.Panel>
+              </Transition.Child>
+            </div>
+          </div>
+        </Dialog>
+      </Transition>
+
+      <div className="bg-white rounded shadow-md text-gray-500 font-medium mt-6 mb-6">
         <div className="flex space-x-4 p-4 items-center">
           <img
             src="https://images.unsplash.com/photo-1670349148055-e11a0b3be242?ixid=MnwxMjA3fDF8MXxhbGx8MXx8fHx8fDJ8fDE2Nzk2MDM0MzA&ixlib=rb-4.0.3&dpr=1&auto=format&fit=crop&w=120&h=200&q=60"
@@ -87,58 +190,43 @@ const WritePost = () => {
             className="rounded-full w-10 h-10 flex-shrink-0"
           />
 
-          {/* <textarea
-            className="bg-gray-100 p-2 rounded-xl min-h-[60px] h-auto flex-grow"
-            placeholder="Write a post"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          ></textarea> */}
-
           <input
             type="text"
             placeholder="Write a post"
-            className="rounded-full h-12 text-base bg-gray-100 flex-grow px-5 min-w-[20px] focus:outline-sky-100"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            className="rounded-full h-12 text-base bg-gray-100 flex-grow px-5 min-w-[20px] outline-none"
+            value={''}
+            readOnly
+            onClick={() => setOpen(true)}
           />
-          <button type="submit" className="hidden">
-            write post
-          </button>
         </div>
-        {previewImage && (
-          <div className="relative">
-            <img className="w-full" src={typeof previewImage === 'string' ? previewImage : ''} alt="" />
-            <button className="absolute top-2 right-2 bg-rose-600 rounded-full font-bold text-white p-1" onClick={removeImage}>
-              <XMarkIcon className="w-5 h-5" />
-            </button>
+
+        <div className="flex justify-evenly p-2 border-t">
+          <div
+            onClick={() => setOpen(true)}
+            className="flex items-center space-x-1 hover:bg-gray-100 flex-grow justify-center p-2 rounded-xl cursor-pointer"
+          >
+            <VideoCameraIcon className="h-5 w-5 text-red-400 flex-shrink-0" />
+            <p className="text-xs sm:text-sm xl:text-base">Live video</p>
           </div>
-        )}
-      </form>
-      <div className="flex justify-evenly p-2 border-t">
-        <div className="flex items-center space-x-1 hover:bg-gray-100 flex-grow justify-center p-2 rounded-xl cursor-pointer">
-          <VideoCameraIcon className="h-5 w-5 text-red-400 flex-shrink-0" />
-          <p className="text-xs sm:text-sm xl:text-base">Live video</p>
-        </div>
 
-        <div
-          className="flex items-center space-x-1 hover:bg-gray-100 flex-grow justify-center p-2 rounded-xl cursor-pointer"
-          onClick={() => {
-            if (fileRef) {
-              fileRef?.current?.click();
-            }
-          }}
-        >
-          <CameraIcon className="h-5 w-5 text-green-400 flex-shrink-0" />
-          <p className="text-xs sm:text-sm xl:text-base">Photo/ video</p>
-          <input type="file" ref={fileRef} onChange={handleFileChange} hidden />
-        </div>
+          <div
+            className="flex items-center space-x-1 hover:bg-gray-100 flex-grow justify-center p-2 rounded-xl cursor-pointer"
+            onClick={() => setOpen(true)}
+          >
+            <CameraIcon className="h-5 w-5 text-green-400 flex-shrink-0" />
+            <p className="text-xs sm:text-sm xl:text-base">Photo/ video</p>
+          </div>
 
-        <div className="flex items-center space-x-1 hover:bg-gray-100 flex-grow justify-center p-2 rounded-xl cursor-pointer">
-          <FaceSmileIcon className="h-5 w-5 text-yellow-300 flex-shrink-0" />
-          <p className="text-xs sm:text-sm xl:text-base">Feeling/ Activity</p>
+          <div
+            onClick={() => setOpen(true)}
+            className="flex items-center space-x-1 hover:bg-gray-100 flex-grow justify-center p-2 rounded-xl cursor-pointer"
+          >
+            <FaceSmileIcon className="h-5 w-5 text-yellow-300 flex-shrink-0" />
+            <p className="text-xs sm:text-sm xl:text-base">Feeling/ Activity</p>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
