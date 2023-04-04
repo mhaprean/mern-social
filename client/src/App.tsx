@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage';
 import MyProfile from './pages/MyProfile';
 import NotFound from './pages/NotFound';
 import RegisterPage from './pages/RegisterPage';
+import UserPage from './pages/UserPage';
+import PostPage from './pages/PostPage';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/my-profile" element={<MyProfile />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/user/:id" element={<UserPage />} />
+            <Route path="/posts/:id" element={<PostPage />} />
             <Route path="/*" element={<NotFound />} />
           </Routes>
         </div>
