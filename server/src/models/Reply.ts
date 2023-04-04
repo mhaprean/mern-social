@@ -1,18 +1,18 @@
 import mongoose, { Document, Model } from 'mongoose';
 
-export interface IPost {
+export interface IReply {
   content: string;
   image?: string;
   user: string;
   createdAt?: Date;
   updatedAt?: Date;
   likes: string[];
-  _doc: Omit<this, '_doc'>; // try to do this in order to acces the _doc object
+  _doc: Omit<this, '_doc'>;
 }
 
-export interface IPostModel extends IPost, Document {}
+export interface IReplyModel extends IReply, Document {}
 
-const postSchema = new mongoose.Schema(
+const replySchema = new mongoose.Schema(
   {
     content: {
       type: String,
@@ -20,6 +20,10 @@ const postSchema = new mongoose.Schema(
     },
     image: {
       type: String,
+    },
+    comment: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Comment',
     },
     user: {
       type: mongoose.Schema.Types.ObjectId,
@@ -32,15 +36,8 @@ const postSchema = new mongoose.Schema(
         default: [],
       },
     ],
-    comments: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: 'Comment',
-        default: [],
-      },
-    ],
   },
   { timestamps: true }
 );
 
-export default mongoose.model<IPostModel>('Post', postSchema);
+export default mongoose.model<IReplyModel>('Reply', replySchema);
