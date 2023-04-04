@@ -36,6 +36,16 @@ export const getPosts = async (req: Request<unknown, unknown, IPost>, res: Respo
   }
 };
 
+export const getSinglePost = async (req: Request<{ id: string }>, res: Response) => {
+  const id = req.params.id;
+  try {
+    const post = await Post.findById(id).populate('user');
+    return res.status(200).json(post);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 export const likePost = async (req: Request<{ id: string }>, res: Response) => {
   const id = req.params.id;
   const userId = req.userId;
