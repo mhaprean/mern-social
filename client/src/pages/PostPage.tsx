@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useGetSinglePostQuery } from '../redux/apiSlice';
-import Post from '../components/Post';
+import Post from '../components/post/Post';
 
 const PostPage = () => {
   const { id } = useParams();

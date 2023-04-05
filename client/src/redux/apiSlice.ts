@@ -13,6 +13,26 @@ export interface IPost {
   createdAt?: string;
   updatedAt?: string;
   likes: string[];
+  comments: string[];
+}
+
+export interface IPostLikes extends Omit<IPost, 'likes'> {
+  likes: {
+    _id: string;
+    name: string;
+    image: string;
+    email: string;
+  }[];
+}
+
+export interface IComment {
+  content: string;
+  image?: string;
+  user: Partial<IUser>;
+  createdAt?: string;
+  updatedAt?: string;
+  likes: string[];
+  replies: string[];
 }
 
 interface ILoginResponse {
@@ -91,6 +111,11 @@ export const backendApi = createApi({
 
     getSinglePost: builder.query<IPost, { postId: string }>({
       query: ({ postId }) => `posts/${postId}`,
+      providesTags: ['Post'],
+    }),
+
+    getPostLikes: builder.query<IPostLikes, { postId: string }>({
+      query: ({ postId }) => `posts/${postId}/likes`,
       providesTags: ['Post'],
     }),
 
@@ -175,6 +200,7 @@ export const {
   useLikePostMutation,
   useGetUserQuery,
   useGetSinglePostQuery,
+  useGetPostLikesQuery,
 } = backendApi;
 
 export default backendApi;
