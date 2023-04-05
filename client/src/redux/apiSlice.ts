@@ -9,6 +9,8 @@ export interface IPost {
   user: {
     _id: string;
     name: string;
+    image: string;
+    email: string;
   };
   createdAt?: string;
   updatedAt?: string;
@@ -93,7 +95,7 @@ export const backendApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Post'],
+  tagTypes: ['Post', 'Comment', 'Likes'],
 
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUser, {}>({
@@ -126,6 +128,20 @@ export const backendApi = createApi({
         body: data,
       }),
       invalidatesTags: ['Post'],
+    }),
+
+    getPostComments: builder.query<IComment[], { postId: string }>({
+      query: ({ postId }) => `comments/post/${postId}`,
+      providesTags: ['Comment'],
+    }),
+
+    addComment: builder.mutation<{}, { content: string; postId: string; image?: string }>({
+      query: (data) => ({
+        url: 'comments/add',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Comment', 'Post'],
     }),
 
     likePost: builder.mutation<ILikePostResponse, string>({
@@ -201,6 +217,8 @@ export const {
   useGetUserQuery,
   useGetSinglePostQuery,
   useGetPostLikesQuery,
+  useGetPostCommentsQuery,
+  useAddCommentMutation,
 } = backendApi;
 
 export default backendApi;
