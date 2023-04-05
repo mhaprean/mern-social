@@ -2,13 +2,16 @@ import { UserCircleIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/24/so
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 
 import { clsx } from 'clsx';
-import { useAppDispatch } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { logout } from '../../redux/authSlice';
 import { Link, useNavigate } from 'react-router-dom';
+import Avatar from '../ui/Avatar';
 
 const AccountDropdown = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const authState = useAppSelector((state) => state.auth);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -19,10 +22,7 @@ const AccountDropdown = () => {
       <DropdownMenuPrimitive.Root>
         <DropdownMenuPrimitive.Trigger asChild>
           <button className="rounded-full hover:bg-slate-300 transition-all flex-shrink-0">
-            <img
-              src="https://images.unsplash.com/photo-1679678691005-3815eb29bc61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHw4MXx8fGVufDB8fHx8&auto=format&fit=crop&w=500&q=60"
-              className="h-6 w-6 rounded-full"
-            />
+            <Avatar image={authState.user?.image} size="small" />
           </button>
         </DropdownMenuPrimitive.Trigger>
 
