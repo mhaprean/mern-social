@@ -39,7 +39,7 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
         </div>
         <div className="text-base font-medium pt-4 pb-2 text-gray-800">
           {post.content.split('\n').map((line, idx) => (
-            <p className="mb-2">{line}</p>
+            <p className="mb-2" key={idx}>{line}</p>
           ))}
         </div>
 

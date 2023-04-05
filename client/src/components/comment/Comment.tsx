@@ -14,7 +14,14 @@ const Comment = ({ comment }: IPropsComment) => {
             <span className="font-bold text-sm">{comment.user.name}</span>
             {/* <span className="text-gray-400 font-bold text-xs">{comment.createdAt}</span> */}
           </div>
-          <p className="text-gray-600 text-base">{comment.content}</p>
+
+          <div className="text-base font-medium pt-4 pb-2 text-gray-600">
+            {comment.content.split('\n').map((line, idx) => (
+              <p className="mb-2" key={idx}>
+                {line}
+              </p>
+            ))}
+          </div>
         </div>
         <div className="flex items-center gap-2 text-xs font-semibold">
           <button className="text-gray-500 hover:text-gray-700 hover:underline">Like</button>

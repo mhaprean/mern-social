@@ -9,7 +9,7 @@ interface IPropsComments {
 const Comments = ({ comments }: IPropsComments) => {
   return (
     <div className="space-y-4 p-4">
-      <h2 className="text-lg font-bold text-gray-700">Comments: </h2>
+      <h2 className="text-md font-bold text-gray-700">Comments: </h2>
       {comments.map((comment, index) => (
         <Comment key={index} comment={comment} />
       ))}

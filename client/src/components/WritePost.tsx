@@ -4,6 +4,7 @@ import { Dialog, Transition } from '@headlessui/react';
 
 import { useAddPostMutation, useUploadImageMutation } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
+import Avatar from './ui/Avatar';
 
 const WritePost = () => {
   const authState = useAppSelector((state) => state.auth);
@@ -11,7 +12,6 @@ const WritePost = () => {
   const [isOpen, setOpen] = useState(false);
 
   const [text, setText] = useState('');
-  const [image, setImage] = useState('');
 
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | ArrayBuffer | null | undefined>(null);
@@ -125,11 +125,8 @@ const WritePost = () => {
                   </Dialog.Title>
                   <div className="overflow-y-auto max-h-[calc(95vh-50px)] p-4">
                     <div className="flex items-center space-x-2">
-                      <img
-                        src="https://images.unsplash.com/photo-1670349148055-e11a0b3be242?ixid=MnwxMjA3fDF8MXxhbGx8MXx8fHx8fDJ8fDE2Nzk2MDM0MzA&ixlib=rb-4.0.3&dpr=1&auto=format&fit=crop&w=120&h=200&q=60"
-                        alt="img"
-                        className="rounded-full h-10 w-10"
-                      />
+                      <Avatar image={authState.user?.image} />
+
                       <div className="flex flex-col justify-center">
                         <p className="font-semibold">{authState.user?.name}</p>
 
@@ -171,7 +168,11 @@ const WritePost = () => {
                       </button>
                     </div>
 
-                    <button onClick={handleSubmit} type="submit" className="w-full bg-sky-800 text-white p-2 rounded-md hover:bg-sky-900">
+                    <button
+                      onClick={handleSubmit}
+                      type="submit"
+                      className="w-full font-semibold bg-sky-800 text-white p-2 rounded-md hover:bg-sky-900"
+                    >
                       Create post
                     </button>
                   </div>
@@ -184,12 +185,7 @@ const WritePost = () => {
 
       <div className="bg-white rounded shadow-md text-gray-500 font-medium mt-6 mb-6">
         <div className="flex space-x-4 p-4 items-center">
-          <img
-            src="https://images.unsplash.com/photo-1670349148055-e11a0b3be242?ixid=MnwxMjA3fDF8MXxhbGx8MXx8fHx8fDJ8fDE2Nzk2MDM0MzA&ixlib=rb-4.0.3&dpr=1&auto=format&fit=crop&w=120&h=200&q=60"
-            alt=""
-            className="rounded-full w-10 h-10 flex-shrink-0"
-          />
-
+          <Avatar image={authState.user?.image} />
           <input
             type="text"
             placeholder="Write a post"
