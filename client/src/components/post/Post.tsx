@@ -1,10 +1,13 @@
-import { IPost } from '../../redux/apiSlice';
+import { IPost, useGetPostCommentsQuery } from '../../redux/apiSlice';
 import { HandThumbUpIcon as LikeSolidIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 
 import { useState } from 'react';
 import LikesDialog from './LikesDialog';
 import PostButtons from './PostButtons';
+import Avatar from '../ui/Avatar';
+import AddComment from '../comment/AddComment';
+import Comments from '../comment/Comments';
 
 interface IPropsPost {
   post: IPost;
@@ -15,15 +18,13 @@ interface IPropsPost {
 const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => {
   const [likesOpen, setLikesOpen] = useState(false);
 
+  const { data: comments, isLoading } = useGetPostCommentsQuery({ postId: post._id }, { skip: !isDialog });
+
   return (
     <div className="flex flex-col bg-white rounded-md mb-4">
       <div className="flex flex-col p-2">
         <div className="flex items-center space-x-2">
-          <img
-            src="https://img.freepik.com/free-icon/user_318-159711.jpg"
-            alt="img"
-            className="rounded-full h-10 w-10"
-          />
+          <Avatar image={post.user?.image} />
           <div>
             <Link to={'/user/' + post.user._id}>
               <p className="font-semibold">{post.user.name}</p>
@@ -78,6 +79,9 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
       </div>
 
       <PostButtons post={post} isDialog={isDialog} onCommentClick={onOpenPost} />
+
+      {isDialog && !isLoading && comments && <Comments comments={comments} />}
+      {isDialog && <AddComment postId={post._id} />}
     </div>
   );
 };

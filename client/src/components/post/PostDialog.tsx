@@ -59,7 +59,9 @@ const PostDialog = ({ post, isOpen, onOpen }: IPropsPostDialog) => {
                   </>
                 )}
 
-                <Post post={postData || post} isDialog={true} />
+                <div className="mt-2 overflow-y-auto max-h-[calc(95vh-50px)]">
+                  <Post post={postData || post} isDialog={true} />
+                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
