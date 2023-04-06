@@ -86,3 +86,28 @@ export const getPostComments = async (req: Request<{ id: string }>, res: Respons
     return res.status(400).json(error);
   }
 };
+
+export const likeComment = async (req: Request<{ id: string }>, res: Response) => {
+  const id = req.params.id; // comment id
+  const userId = req.userId;
+  try {
+    const comment = await Comment.findById(id);
+
+    if (!comment) {
+      return res.status(400).json({ message: 'Wrong comment id.' });
+    }
+    if (!userId) {
+      return res.status(400).json({ message: 'You are not authenticated.' });
+    }
+
+    if (comment.likes.includes(userId)) {
+      const removeLike = await comment.updateOne({ $pull: { likes: userId } });
+      return res.status(200).json({ message: 'Like removed from comment' });
+    } else {
+      const addLike = await comment.updateOne({ $push: { likes: userId } });
+      return res.status(200).json({ message: 'Like added to comment' });
+    }
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
