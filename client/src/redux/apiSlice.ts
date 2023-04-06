@@ -28,6 +28,7 @@ export interface IPostLikes extends Omit<IPost, 'likes'> {
 }
 
 export interface IComment {
+  _id: string;
   content: string;
   image?: string;
   user: Partial<IUser>;
@@ -35,6 +36,7 @@ export interface IComment {
   updatedAt?: string;
   likes: string[];
   replies: string[];
+  post: string; // postId from db
 }
 
 interface ILoginResponse {
@@ -95,7 +97,7 @@ export const backendApi = createApi({
       return headers;
     },
   }),
-  tagTypes: ['Post', 'Comment', 'Likes'],
+  tagTypes: ['Post', 'Posts', 'Comment', 'Comments', 'Likes'],
 
   endpoints: (builder) => ({
     getMyProfile: builder.query<IUser, {}>({
@@ -142,6 +144,35 @@ export const backendApi = createApi({
         body: data,
       }),
       invalidatesTags: ['Comment', 'Post'],
+    }),
+
+    likeComment: builder.mutation<ILikePostResponse, { commentId: string; postId: string; userId: string }>({
+      query({ commentId }) {
+        return {
+          url: `comments/${commentId}/like`,
+          method: 'POST',
+        };
+      },
+      onQueryStarted({ commentId, postId, userId }, { dispatch, queryFulfilled }) {
+        const updateResult = dispatch(
+          backendApi.util.updateQueryData('getPostComments', { postId: postId }, (draft) => {
+
+            // update data in a mutable way 
+            draft = draft.map((comm, idx) => {
+              if (comm._id === commentId) {
+                if (comm.likes.includes(userId)) {
+                  comm.likes = comm.likes.filter((like) => like !== userId);
+                } else {
+                  comm.likes = [...comm.likes, userId];
+                }
+              }
+              return comm;
+            });
+          })
+        );
+        queryFulfilled.catch(updateResult.undo);
+      },
+      invalidatesTags: ['Comment'],
     }),
 
     likePost: builder.mutation<ILikePostResponse, string>({
@@ -219,6 +250,7 @@ export const {
   useGetPostLikesQuery,
   useGetPostCommentsQuery,
   useAddCommentMutation,
+  useLikeCommentMutation,
 } = backendApi;
 
 export default backendApi;

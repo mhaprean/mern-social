@@ -39,7 +39,9 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
         </div>
         <div className="text-base font-medium pt-4 pb-2 text-gray-800">
           {post.content.split('\n').map((line, idx) => (
-            <p className="mb-2" key={idx}>{line}</p>
+            <p className="mb-2" key={idx}>
+              {line}
+            </p>
           ))}
         </div>
 
@@ -65,7 +67,7 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
 
           {post.comments && post.comments.length > 0 && (
             <button
-              className="text-sm ml-auto"
+              className="text-sm ml-auto hover:underline"
               onClick={() => {
                 if (!isDialog) {
                   onOpenPost();

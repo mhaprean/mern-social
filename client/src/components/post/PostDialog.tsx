@@ -39,7 +39,10 @@ const PostDialog = ({ post, isOpen, onOpen }: IPropsPostDialog) => {
               leaveFrom="opacity-100 mt-0"
               leaveTo="opacity-0 mt-80"
             >
-              <Dialog.Panel className="w-full max-w-xl transform overflow-hidden rounded-md bg-white p-0 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel
+                className="w-full max-h-[100vh]  sm:max-h-[calc(100vh-50px)] max-w-xl transform overflow-hidden rounded-md bg-white p-0 text-left align-middle shadow-xl 
+              transition-all"
+              >
                 <Dialog.Title as="div" className="text-lg font-semibold leading-6 text-gray-800 border p-2 flex items-center">
                   <p>Write a comment</p>
 
@@ -59,7 +62,7 @@ const PostDialog = ({ post, isOpen, onOpen }: IPropsPostDialog) => {
                   </>
                 )}
 
-                <div className="mt-2 overflow-y-auto max-h-[calc(95vh-50px)]">
+                <div className=" overflow-y-auto max-h-[calc(100vh-50px)] sm:max-h-[calc(100vh-100px)]">
                   <Post post={postData || post} isDialog={true} />
                 </div>
               </Dialog.Panel>
