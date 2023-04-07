@@ -42,7 +42,7 @@ const Comment = ({ comment }: IPropsComment) => {
             {/* <span className="text-gray-400 font-bold text-xs">{comment.createdAt}</span> */}
           </div>
 
-          <div className="text-base font-medium pt-4 pb-2 text-gray-600">
+          <div className="text-base font-medium pt-2 pb-2 text-gray-600">
             {comment.content.split('\n').map((line, idx) => (
               <p className="mb-2" key={idx}>
                 {line}
@@ -50,6 +50,12 @@ const Comment = ({ comment }: IPropsComment) => {
             ))}
           </div>
         </div>
+
+        {comment.image && (
+          <div className="flex flex-col bg-gray-700 my-2 rounded-md">
+            <img src={comment.image} alt="" className="object-fill rounded-md" />
+          </div>
+        )}
         <div className="flex items-center gap-2 text-xs font-semibold">
           <button
             onClick={handleLikeComment}
