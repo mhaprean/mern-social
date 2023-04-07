@@ -10,7 +10,7 @@ export const addComment = async (req: Request<{ id: string }>, res: Response) =>
 
   try {
     const joiSchema = Joi.object({
-      content: Joi.string().min(3).max(60).required(),
+      content: Joi.string().min(2).max(60).required(),
       image: Joi.string(),
       postId: Joi.string().hex().length(24),
     });
@@ -25,6 +25,7 @@ export const addComment = async (req: Request<{ id: string }>, res: Response) =>
       content: req.body.content,
       post: req.body.postId,
       user: userId,
+      image: req.body.image,
     };
 
     const comment = await Comment.create(newComment);
