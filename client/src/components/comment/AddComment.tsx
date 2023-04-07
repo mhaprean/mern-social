@@ -1,13 +1,11 @@
 import React, { useRef, useState } from 'react';
 import Avatar from '../ui/Avatar';
 import { IComment, useAddCommentMutation, useUploadImageMutation } from '../../redux/apiSlice';
-import data from '@emoji-mart/data';
-import Picker from '@emoji-mart/react';
 
-import { FaceSmileIcon, PhotoIcon, XMarkIcon } from '@heroicons/react/24/solid';
+import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
-import { Popover } from '@headlessui/react';
 import { useUploadImage } from '../../hooks/useUploadImage';
+import EmojiPicker from '../EmojiPicker';
 
 interface IPropsAddComment {
   postId: string;
@@ -43,8 +41,8 @@ const AddComment = ({ postId }: IPropsAddComment) => {
   };
 
   // add emoji
-  const addEmoji = (e: any) => {
-    setText(text + e.native);
+  const addEmojiToText = (val: string) => {
+    setText(text + val);
   };
 
   const handleSubmit = async () => {
@@ -108,18 +106,7 @@ const AddComment = ({ postId }: IPropsAddComment) => {
             <input type="file" ref={fileRef} onChange={handleFileChange} hidden />
           </button>
 
-          <Popover className="relative">
-            <Popover.Button
-              className="h-8 w-8 rounded-full bg-slate-200 hover:bg-slate-300 transition-all duration-200
-             p-1.5 flex items-center justify-center ml-1"
-            >
-              <FaceSmileIcon className="w-7 h-7 text-orange-400" />
-            </Popover.Button>
-
-            <Popover.Panel className="absolute z-10 border bg-white rounded-xl right-0 bottom-[40px]">
-              <Picker data={data} emojiSize={20} emojiButtonSize={28} onEmojiSelect={addEmoji} maxFrequentRows={0} />
-            </Popover.Panel>
-          </Popover>
+          <EmojiPicker onPick={addEmojiToText} />
         </div>
 
         <button className="px-4 py-2 mt-2 text-sm font-semibold  text-white  bg-sky-800 rounded-md hover:bg-sky-900" onClick={handleSubmit}>

@@ -45,7 +45,7 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
         <div className="text-base font-medium pt-2 pb-2 text-gray-800">
           {post.content.split('\n').map((line, idx) =>
             line.length === 0 ? (
-              <p className="h-2"></p>
+              <p className="h-2" key={idx}></p>
             ) : (
               <p className="mb-2" key={idx}>
                 {line}

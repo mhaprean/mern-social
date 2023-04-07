@@ -5,6 +5,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { useAddPostMutation, useUploadImageMutation } from '../redux/apiSlice';
 import { useAppSelector } from '../redux/hooks';
 import Avatar from './ui/Avatar';
+import EmojiPicker from './EmojiPicker';
 
 const WritePost = () => {
   const authState = useAppSelector((state) => state.auth);
@@ -21,6 +22,11 @@ const WritePost = () => {
   const [addPost, response] = useAddPostMutation();
 
   const [uploadImage, responseUploadImage] = useUploadImageMutation();
+
+  // add emoji
+  const addEmojiToText = (val: string) => {
+    setText(text + val);
+  };
 
   const handleImageUpload = async () => {
     if (!currentFile) {
@@ -157,6 +163,7 @@ const WritePost = () => {
 
                     <div className="border p-2 rounded-md mb-4 flex items-center">
                       <p className="text-sm text-gray-500 mr-auto">Add to your post:</p>
+                      <EmojiPicker onPick={addEmojiToText} />
                       <button
                         className="h-8 w-8 rounded-full bg-slate-200 hover:bg-slate-300 transition-all duration-200
                          p-1.5 flex items-center justify-center"
