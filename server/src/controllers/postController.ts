@@ -7,7 +7,7 @@ export const createPost = async (req: Request<unknown, unknown, IPost>, res: Res
     const userId = req.userId;
 
     const joiSchema = Joi.object({
-      content: Joi.string().min(3).max(60).required(),
+      content: Joi.string().min(3).required(),
       image: Joi.string(),
     });
 
@@ -53,7 +53,6 @@ export const getPostLikes = async (req: Request<{ id: string }>, res: Response) 
     const post = await Post.findById(id).populate('likes', '_id name email image');
 
     return res.status(200).json(post);
-    
   } catch (error) {
     return res.status(400).json(error);
   }

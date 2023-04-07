@@ -10,6 +10,7 @@ import authRoutes from './routes/authRoutes';
 import postRoutes from './routes/postRoutes';
 import userRoutes from './routes/userRoutes';
 import commentRoutes from './routes/commentRoutes';
+import { isAuth } from './middleware/authMiddleware';
 
 const app = express();
 dotenv.config();
@@ -39,7 +40,7 @@ app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/comments', commentRoutes);
 
-app.post('/api/upload', async (req, res) => {
+app.post('/api/upload', isAuth, async (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
     return res.status(400).send('No files were uploaded.');
   }
