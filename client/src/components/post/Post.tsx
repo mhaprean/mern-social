@@ -8,6 +8,7 @@ import PostButtons from './PostButtons';
 import Avatar from '../ui/Avatar';
 import AddComment from '../comment/AddComment';
 import Comments from '../comment/Comments';
+import { useAppSelector } from '../../redux/hooks';
 
 interface IPropsPost {
   post: IPost;
@@ -19,6 +20,10 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
   const [likesOpen, setLikesOpen] = useState(false);
 
   const { data: comments, isLoading } = useGetPostCommentsQuery({ postId: post._id }, { skip: !isDialog });
+
+  const authState = useAppSelector((state) => state.auth);
+
+  const authUserId = authState.isAuth && authState.user ? authState.user._id : '0';
 
   return (
     <div className="flex flex-col bg-white rounded-md mb-4">
@@ -37,12 +42,16 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
             </Link>
           </div>
         </div>
-        <div className="text-base font-medium pt-4 pb-2 text-gray-800">
-          {post.content.split('\n').map((line, idx) => (
-            <p className="mb-2" key={idx}>
-              {line}
-            </p>
-          ))}
+        <div className="text-base font-medium pt-2 pb-2 text-gray-800">
+          {post.content.split('\n').map((line, idx) =>
+            line.length === 0 ? (
+              <p className="h-2"></p>
+            ) : (
+              <p className="mb-2" key={idx}>
+                {line}
+              </p>
+            )
+          )}
         </div>
 
         {!!post.image && (
@@ -58,7 +67,11 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
                 <p className="p-1 rounded-full bg-blue-500 mr-1">
                   <LikeSolidIcon className="w-3 h-3 text-white" />
                 </p>
-                <p className="text-sm font-semibold  mr-2">{post.likes.length}</p>
+                <p className="text-sm font-semibold  mr-2">
+                  {post.likes.includes(authUserId) &&
+                    (post.likes.length === 1 ? 'You like this.' : `You and ${post.likes.length - 1} others`)}
+                  {!post.likes.includes(authUserId) && post.likes.length}
+                </p>
               </button>
 
               <LikesDialog isOpen={likesOpen} setOpen={setLikesOpen} postId={post._id} />
