@@ -68,10 +68,13 @@ const WritePost = () => {
     try {
       const image = await handleImageUpload();
 
-      let postBody = {
+      let postBody: { content: string; image?: string } = {
         content: text,
-        image: image,
       };
+
+      if (image) {
+        postBody.image = image;
+      }
       const result = await addPost(postBody).unwrap();
       if (result) {
         setText('');
