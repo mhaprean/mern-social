@@ -23,8 +23,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Log the configuration
-console.log(cloudinary.config());
 
 // app middlewares
 app.use(express.json());

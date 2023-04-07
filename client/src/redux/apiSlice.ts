@@ -146,6 +146,15 @@ export const backendApi = createApi({
       invalidatesTags: ['Comment', 'Post'],
     }),
 
+    addReply: builder.mutation<{}, { content: string; commentId: string; image?: string }>({
+      query: (data) => ({
+        url: 'comments/add-reply',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Comment', 'Post'],
+    }),
+
     likeComment: builder.mutation<ILikePostResponse, { commentId: string; postId: string; userId: string }>({
       query({ commentId }) {
         return {
@@ -156,8 +165,7 @@ export const backendApi = createApi({
       onQueryStarted({ commentId, postId, userId }, { dispatch, queryFulfilled }) {
         const updateResult = dispatch(
           backendApi.util.updateQueryData('getPostComments', { postId: postId }, (draft) => {
-
-            // update data in a mutable way 
+            // update data in a mutable way
             draft = draft.map((comm, idx) => {
               if (comm._id === commentId) {
                 if (comm.likes.includes(userId)) {
@@ -251,6 +259,7 @@ export const {
   useGetPostCommentsQuery,
   useAddCommentMutation,
   useLikeCommentMutation,
+  useAddReplyMutation,
 } = backendApi;
 
 export default backendApi;

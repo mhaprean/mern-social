@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import Avatar from '../ui/Avatar';
-import { IComment, useAddCommentMutation, useUploadImageMutation } from '../../redux/apiSlice';
+import { IComment, useAddCommentMutation, useAddReplyMutation, useUploadImageMutation } from '../../redux/apiSlice';
 
 import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
@@ -9,11 +9,16 @@ import EmojiPicker from '../EmojiPicker';
 
 interface IPropsAddComment {
   postId: string;
+  commentId?: string;
+  isReply?: boolean;
+  setOpenReply?: (val: boolean) => void;
 }
 
-const AddComment = ({ postId }: IPropsAddComment) => {
+const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = () => {} }: IPropsAddComment) => {
   const [text, setText] = useState('');
   const [addComment, response] = useAddCommentMutation();
+
+  const [addReply, addReplyResponse] = useAddReplyMutation();
 
   const [currentFile, setCurrentFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | ArrayBuffer | null | undefined>(null);
@@ -46,23 +51,41 @@ const AddComment = ({ postId }: IPropsAddComment) => {
   };
 
   const handleSubmit = async () => {
-    if (response.isLoading || text.length < 1) {
+    if (response.isLoading || addReplyResponse.isLoading || text.length < 1) {
       return;
     }
 
     try {
-      let newComment: Partial<IComment> & { postId: string } = { content: text, postId: postId };
+      if (isReply) {
+        let newReply: { content: string; commentId: string; image?: string } = { content: text, commentId: commentId };
 
-      if (currentFile) {
-        const image = await handleImageUpload();
-        newComment = { ...newComment, image };
-      }
-      const res = await addComment({ ...newComment, content: text, postId: postId }).unwrap();
+        if (currentFile) {
+          const image = await handleImageUpload();
+          newReply = { ...newReply, image };
+        }
 
-      if (res) {
-        setText('');
-        setPreviewImage(null);
-        setCurrentFile(null);
+        const res = await addReply({ ...newReply, content: text }).unwrap();
+
+        if (res) {
+          setText('');
+          setPreviewImage(null);
+          setCurrentFile(null);
+          setOpenReply(false);
+        }
+      } else {
+        let newComment: Partial<IComment> & { postId: string } = { content: text, postId: postId };
+
+        if (currentFile) {
+          const image = await handleImageUpload();
+          newComment = { ...newComment, image };
+        }
+        const res = await addComment({ ...newComment, content: text, postId: postId }).unwrap();
+
+        if (res) {
+          setText('');
+          setPreviewImage(null);
+          setCurrentFile(null);
+        }
       }
     } catch (error) {
       console.log('!!! error adding comment: ', error);
@@ -72,13 +95,13 @@ const AddComment = ({ postId }: IPropsAddComment) => {
   };
 
   return (
-    <div className="flex p-2">
+    <div className="flex my-2">
       <Avatar />
       <div className="flex flex-grow flex-col p-2 pt-0 relative">
         <textarea
           id="comment"
-          className="block w-full border border-gray-300 p-2 pb-6 shadow-sm bg-slate-50 rounded-xl min-h-[60px] h-max"
-          placeholder="Write a comment..."
+          className="block w-full border border-gray-300 p-2 pb-6 shadow-sm bg-slate-50 rounded-xl min-h-[30px] h-max"
+          placeholder={isReply ? 'Write a reply...' : 'Write a comment...'}
           value={text}
           onChange={(event) => setText(event.target.value)}
         ></textarea>

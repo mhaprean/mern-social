@@ -18,7 +18,7 @@ const PostPage = () => {
         </>
       )}
 
-      {!isLoading && post && <Post post={post} />}
+      {!isLoading && post && <Post post={post} isDialog={true} />}
     </div>
   );
 };

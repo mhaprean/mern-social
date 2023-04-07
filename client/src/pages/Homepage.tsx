@@ -20,6 +20,8 @@ const Homepage = () => {
     <div className="py-4">
       <WritePost />
 
+      {isLoading && <div className="text-base my-4">Loading...</div>}
+
       {selectedPost && <PostDialog isOpen={postDialogOpen} onOpen={setPostDialogOpen} post={selectedPost} />}
 
       {!isLoading && data && data.posts.map((post) => <Post key={post._id} post={post} onOpenPost={() => openPost(post)} />)}
