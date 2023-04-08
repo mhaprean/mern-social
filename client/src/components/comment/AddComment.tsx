@@ -133,7 +133,7 @@ const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = ()
         </div>
 
         <button className="px-4 py-2 mt-2 text-sm font-semibold  text-white  bg-sky-800 rounded-md hover:bg-sky-900" onClick={handleSubmit}>
-          Add comment
+          {isReply ? 'Add reply' : 'Add comment'}
         </button>
       </div>
     </div>

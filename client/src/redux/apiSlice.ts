@@ -27,7 +27,7 @@ export interface IPostLikes extends Omit<IPost, 'likes'> {
   }[];
 }
 
-export interface IComment {
+interface ICommentBase {
   _id: string;
   content: string;
   image?: string;
@@ -35,8 +35,14 @@ export interface IComment {
   createdAt?: string;
   updatedAt?: string;
   likes: string[];
-  replies: string[];
+}
+export interface IComment extends ICommentBase {
+  replies: IReply[];
   post: string; // postId from db
+}
+
+export interface IReply extends ICommentBase {
+  comment: string;
 }
 
 interface ILoginResponse {

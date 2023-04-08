@@ -96,7 +96,11 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
       <PostButtons post={post} isDialog={isDialog} onCommentClick={onOpenPost} />
 
       {isDialog && !isLoading && comments && <Comments comments={comments} />}
-      {isDialog && <AddComment postId={post._id} />}
+      {isDialog && (
+        <div className="p-4">
+          <AddComment postId={post._id} />
+        </div>
+      )}
     </div>
   );
 };
