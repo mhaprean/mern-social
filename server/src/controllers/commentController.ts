@@ -112,3 +112,30 @@ export const likeComment = async (req: Request<{ id: string }>, res: Response) =
     return res.status(400).json(error);
   }
 };
+
+export const likeReply = async (req: Request<{ id: string }>, res: Response) => {
+  const id = req.params.id; // comment id
+  const userId = req.userId;
+  try {
+    console.log('reply id: ', id);
+    
+    const reply = await Reply.findById(id);
+
+    if (!reply) {
+      return res.status(400).json({ message: 'Wrong reply id.' });
+    }
+    if (!userId) {
+      return res.status(400).json({ message: 'You are not authenticated.' });
+    }
+
+    if (reply.likes.includes(userId)) {
+      const removeLike = await reply.updateOne({ $pull: { likes: userId } });
+      return res.status(200).json({ message: 'Like removed from comment' });
+    } else {
+      const addLike = await reply.updateOne({ $push: { likes: userId } });
+      return res.status(200).json({ message: 'Like added to comment' });
+    }
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};

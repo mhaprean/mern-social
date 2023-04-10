@@ -1,16 +1,29 @@
 import React, { useState } from 'react';
-import { IReply } from '../../redux/apiSlice';
+import { IReply, useLikeReplyMutation } from '../../redux/apiSlice';
 import CommentBase from './CommentBase';
 
 interface IPropsReply {
   reply: IReply;
   isLast?: boolean;
+  userId: string;
+  postId: string;
 }
 
-const Reply = ({ reply, isLast = false }: IPropsReply) => {
+const Reply = ({ reply, userId, postId, isLast = false }: IPropsReply) => {
   const [replyOpen, setReplyOpen] = useState(false);
 
-  const handleLikeReply = () => {};
+  const [likeReply, response] = useLikeReplyMutation();
+
+  const handleLikeReply = async () => {
+    if (!userId || response.isLoading) {
+      return;
+    }
+    try {
+      const res = await likeReply({ commentId: reply.comment, replyId: reply._id, userId, postId }).unwrap();
+    } catch (error) {
+      console.log('!!! error: ', error);
+    }
+  };
 
   const replyLiked = false;
 

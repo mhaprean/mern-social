@@ -57,7 +57,15 @@ const Comment = ({ comment }: IPropsComment) => {
 
       {showReplies &&
         comment.replies.length > 0 &&
-        comment.replies.map((reply, idx) => <Reply key={reply._id || idx} reply={reply} isLast={comment.replies.length - 1 === idx} />)}
+        comment.replies.map((reply, idx) => (
+          <Reply
+            key={reply._id || idx}
+            reply={reply}
+            isLast={comment.replies.length - 1 === idx}
+            userId={authState.user?._id || ''}
+            postId={comment.post}
+          />
+        ))}
 
       {replyOpen && <AddReply commentId={comment._id} setOpenReply={setReplyOpen} />}
     </div>
