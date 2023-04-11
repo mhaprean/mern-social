@@ -1,4 +1,3 @@
-import { useAddReplyMutation } from '../../redux/apiSlice';
 import AddComment from './AddComment';
 
 interface IPropsAddReply {

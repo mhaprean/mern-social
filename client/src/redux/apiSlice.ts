@@ -143,17 +143,30 @@ export const backendApi = createApi({
       providesTags: ['Comment'],
     }),
 
-    addComment: builder.mutation<{}, { content: string; postId: string; image?: string }>({
-      query: (data) => ({
+    addComment: builder.mutation<{}, { content: string; postId: string; image?: string; user: Partial<IUser> }>({
+      query: ({ content, postId, image, user }) => ({
         url: 'comments/add',
         method: 'POST',
-        body: data,
+        body: {
+          content,
+          postId,
+          image,
+        },
       }),
+      onQueryStarted({ postId, image, content, user }, { dispatch, queryFulfilled }) {
+        const updateResult = dispatch(
+          backendApi.util.updateQueryData('getPostComments', { postId: postId }, (draft) => {
+            // update data in a mutable way
+            draft.push({ content: content, user: user, post: postId, replies: [], likes: [], _id: '123' });
+          })
+        );
+        queryFulfilled.catch(updateResult.undo);
+      },
       invalidatesTags: ['Comment', 'Post'],
     }),
 
-    addReply: builder.mutation<{}, { content: string; commentId: string; image?: string }>({
-      query: (data) => ({
+    addReply: builder.mutation<{}, { content: string; commentId: string; image?: string; user: Partial<IUser>; postId: string }>({
+      query: ({ user, postId, ...data }) => ({
         url: 'comments/add-reply',
         method: 'POST',
         body: data,

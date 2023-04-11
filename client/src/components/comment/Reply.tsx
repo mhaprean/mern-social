@@ -7,11 +7,11 @@ interface IPropsReply {
   isLast?: boolean;
   userId: string;
   postId: string;
+  replyOpen: boolean;
+  onReplyOpen: () => void;
 }
 
-const Reply = ({ reply, userId, postId, isLast = false }: IPropsReply) => {
-  const [replyOpen, setReplyOpen] = useState(false);
-
+const Reply = ({ reply, userId, postId, replyOpen, onReplyOpen, isLast = false }: IPropsReply) => {
   const [likeReply, response] = useLikeReplyMutation();
 
   const handleLikeReply = async () => {
@@ -35,7 +35,7 @@ const Reply = ({ reply, userId, postId, isLast = false }: IPropsReply) => {
       <CommentBase
         comment={reply}
         replyOpen={replyOpen}
-        onReplyOpen={setReplyOpen}
+        onReplyOpen={onReplyOpen}
         onLikeComment={handleLikeReply}
         commentLiked={!!replyLiked}
         hasReplies={false}

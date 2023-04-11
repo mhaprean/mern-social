@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Avatar from '../ui/Avatar';
 import { IComment, useAddCommentMutation, useAddReplyMutation, useUploadImageMutation } from '../../redux/apiSlice';
 
@@ -6,6 +6,8 @@ import { PhotoIcon, XMarkIcon } from '@heroicons/react/24/solid';
 
 import { useUploadImage } from '../../hooks/useUploadImage';
 import EmojiPicker from '../EmojiPicker';
+import { useAppSelector } from '../../redux/hooks';
+import { IUser } from '../../redux/authSlice';
 
 interface IPropsAddComment {
   postId: string;
@@ -18,6 +20,10 @@ const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = ()
   const [text, setText] = useState('');
   const [addComment, response] = useAddCommentMutation();
 
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const authState = useAppSelector((state) => state.auth);
+
   const [addReply, addReplyResponse] = useAddReplyMutation();
 
   const [currentFile, setCurrentFile] = useState<File | null>(null);
@@ -26,6 +32,13 @@ const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = ()
   const { handleImageUpload } = useUploadImage(currentFile);
 
   const fileRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (textareaRef?.current && isReply) {
+      textareaRef.current.focus();
+      textareaRef.current.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const reader = new FileReader();
@@ -55,9 +68,20 @@ const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = ()
       return;
     }
 
+    if (!authState.isAuth || !authState.user) {
+      return;
+    }
+
+    const user = { _id: authState.user._id, name: authState.user.name, email: authState.user.email };
+
     try {
       if (isReply) {
-        let newReply: { content: string; commentId: string; image?: string } = { content: text, commentId: commentId };
+        let newReply: { content: string; commentId: string; image?: string; user: Partial<IUser>; postId: string } = {
+          content: text,
+          commentId: commentId,
+          user,
+          postId,
+        };
 
         if (currentFile) {
           const image = await handleImageUpload();
@@ -79,7 +103,7 @@ const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = ()
           const image = await handleImageUpload();
           newComment = { ...newComment, image };
         }
-        const res = await addComment({ ...newComment, content: text, postId: postId }).unwrap();
+        const res = await addComment({ ...newComment, content: text, postId: postId, user }).unwrap();
 
         if (res) {
           setText('');
@@ -90,7 +114,6 @@ const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = ()
     } catch (error) {
       console.log('!!! error adding comment: ', error);
     }
-    console.log(text);
     setText('');
   };
 
@@ -99,7 +122,7 @@ const AddComment = ({ postId, commentId = '', isReply = false, setOpenReply = ()
       <Avatar />
       <div className="flex flex-grow flex-col p-2 pt-0 relative">
         <textarea
-          id="comment"
+          ref={textareaRef}
           className="block w-full border border-gray-300 p-2 pb-6 shadow-sm bg-slate-50 rounded-xl min-h-[30px] h-max"
           placeholder={isReply ? 'Write a reply...' : 'Write a comment...'}
           value={text}

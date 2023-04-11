@@ -1,11 +1,10 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import Comment from '../models/Comment';
 import Joi from 'joi';
 import Reply from '../models/Reply';
 import Post from '../models/Post';
 
-export const addComment = async (req: Request<{ id: string }>, res: Response) => {
-  const id = req.params.id;
+export const addComment = async (req: Request, res: Response) => {
   const userId = req.userId;
 
   try {
@@ -38,8 +37,7 @@ export const addComment = async (req: Request<{ id: string }>, res: Response) =>
   }
 };
 
-export const addReply = async (req: Request<{ id: string }>, res: Response) => {
-  const id = req.params.id;
+export const addReply = async (req: Request, res: Response) => {
   const userId = req.userId;
 
   try {
@@ -117,8 +115,6 @@ export const likeReply = async (req: Request<{ id: string }>, res: Response) => 
   const id = req.params.id; // comment id
   const userId = req.userId;
   try {
-    console.log('reply id: ', id);
-    
     const reply = await Reply.findById(id);
 
     if (!reply) {

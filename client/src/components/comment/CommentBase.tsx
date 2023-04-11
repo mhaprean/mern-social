@@ -6,7 +6,7 @@ import { HandThumbUpIcon as LikeSolidIcon } from '@heroicons/react/24/solid';
 interface IPropsCommentBase {
   comment: IReply | IComment;
   replyOpen: boolean;
-  onReplyOpen: (val: boolean) => void;
+  onReplyOpen: () => void;
   commentLiked: boolean;
   onLikeComment: () => void;
   hasReplies: boolean;
@@ -60,7 +60,7 @@ const CommentBase = ({ comment, commentLiked, onLikeComment, replyOpen, onReplyO
           </button>
           <button
             onClick={() => {
-              onReplyOpen(!replyOpen);
+              onReplyOpen();
             }}
             className="text-gray-500 hover:text-gray-700 hover:underline"
           >

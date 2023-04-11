@@ -1,8 +1,5 @@
-import { Link } from 'react-router-dom';
 import { IComment, useLikeCommentMutation } from '../../redux/apiSlice';
-import { HandThumbUpIcon as LikeSolidIcon } from '@heroicons/react/24/solid';
 import { useAppSelector } from '../../redux/hooks';
-import classNames from 'classnames';
 import AddReply from './AddReply';
 import { useState } from 'react';
 import Reply from './Reply';
@@ -40,7 +37,10 @@ const Comment = ({ comment }: IPropsComment) => {
       <CommentBase
         comment={comment}
         replyOpen={replyOpen}
-        onReplyOpen={setReplyOpen}
+        onReplyOpen={() => {
+          setReplyOpen(true);
+          setShowReplies(true);
+        }}
         onLikeComment={handleLikeComment}
         commentLiked={!!commentLiked}
         hasReplies={comment.replies.length > 0}
@@ -64,6 +64,10 @@ const Comment = ({ comment }: IPropsComment) => {
             isLast={comment.replies.length - 1 === idx}
             userId={authState.user?._id || ''}
             postId={comment.post}
+            replyOpen={replyOpen}
+            onReplyOpen={() => {
+              setReplyOpen(true);
+            }}
           />
         ))}
 
