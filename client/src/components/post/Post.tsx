@@ -29,7 +29,7 @@ const Post = ({ post, isDialog = false, onOpenPost = () => {} }: IPropsPost) => 
     <div className="flex flex-col bg-white rounded-md mb-4">
       <div className="flex flex-col p-2">
         <div className="flex items-center space-x-2">
-          <Avatar image={post.user?.image} />
+          <Avatar image={post.user?.image || ''} />
           <div>
             <Link to={'/user/' + post.user._id}>
               <p className="font-semibold">{post.user.name}</p>

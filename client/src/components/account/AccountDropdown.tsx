@@ -22,7 +22,7 @@ const AccountDropdown = () => {
       <DropdownMenuPrimitive.Root>
         <DropdownMenuPrimitive.Trigger asChild>
           <button className="rounded-full hover:bg-slate-300 transition-all flex-shrink-0">
-            <Avatar image={authState.user?.image} size="small" />
+            <Avatar image={authState.user?.image || ''} size="small" />
           </button>
         </DropdownMenuPrimitive.Trigger>
 

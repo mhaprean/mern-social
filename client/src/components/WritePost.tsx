@@ -134,7 +134,7 @@ const WritePost = () => {
                   </Dialog.Title>
                   <div className="overflow-y-auto max-h-[calc(95vh-50px)] p-4">
                     <div className="flex items-center space-x-2">
-                      <Avatar image={authState.user?.image} />
+                      <Avatar image={authState.user?.image || ''} />
 
                       <div className="flex flex-col justify-center">
                         <p className="font-semibold">{authState.user?.name}</p>
@@ -194,8 +194,9 @@ const WritePost = () => {
       </Transition>
 
       <div className="bg-white rounded shadow-md text-gray-500 font-medium mt-6 mb-6">
+        {authState.user?.image}
         <div className="flex space-x-4 p-4 items-center">
-          <Avatar image={authState.user?.image} />
+          <Avatar image={authState.user?.image || ''} />
           <input
             type="text"
             placeholder="Write a post"

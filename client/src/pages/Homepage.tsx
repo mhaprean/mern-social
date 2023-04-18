@@ -17,14 +17,16 @@ const Homepage = () => {
   };
 
   return (
-    <div className="py-4">
-      <WritePost />
+    <div className="max-w-xl m-auto">
+      <div className="py-4">
+        <WritePost />
 
-      {isLoading && <div className="text-base my-4">Loading...</div>}
+        {isLoading && <div className="text-base my-4">Loading...</div>}
 
-      {selectedPost && <PostDialog isOpen={postDialogOpen} onOpen={setPostDialogOpen} post={selectedPost} />}
+        {selectedPost && <PostDialog isOpen={postDialogOpen} onOpen={setPostDialogOpen} post={selectedPost} />}
 
-      {!isLoading && data && data.posts.map((post) => <Post key={post._id} post={post} onOpenPost={() => openPost(post)} />)}
+        {!isLoading && data && data.posts.map((post) => <Post key={post._id} post={post} onOpenPost={() => openPost(post)} />)}
+      </div>
     </div>
   );
 };

@@ -5,10 +5,11 @@ interface IPropsAvatar {
   size?: 'small' | 'medium' | 'large';
 }
 
-const Avatar = ({ image = 'https://img.freepik.com/free-icon/user_318-159711.jpg', size = 'medium' }: IPropsAvatar) => {
+const Avatar = ({ image = '', size = 'medium' }: IPropsAvatar) => {
+  const defaultImage = 'https://img.freepik.com/free-icon/user_318-159711.jpg';
   return (
     <img
-      src={image}
+      src={image || defaultImage}
       alt=""
       className={classNames('rounded-full flex-shrink-0', {
         'h-10 w-10': size === 'medium',
