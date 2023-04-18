@@ -18,8 +18,8 @@ const Navigation = () => {
   ];
 
   return (
-    <div className="fixed top-0 left-0 w-full border shadow-sm h-[55px] flex text-sky-900 bg-white px-2">
-      <div className="max-w-xl m-auto flex items-center w-full">
+    <div className="fixed top-0 left-0 w-full border shadow-sm h-[55px] flex text-sky-900 bg-white px-2 z-10">
+      <div className=" m-auto flex items-center w-full">
         <Link to="/">
           <h2 className="font-bold">MernSocial</h2>
         </Link>

@@ -124,6 +124,11 @@ export const backendApi = createApi({
       providesTags: ['Post'],
     }),
 
+    getUserPosts: builder.query<{ posts: IPost[] }, { userId: string }>({
+      query: ({ userId }) => `posts/user/${userId}`,
+      providesTags: ['Post'],
+    }),
+
     getPostLikes: builder.query<IPostLikes, { postId: string }>({
       query: ({ postId }) => `posts/${postId}/likes`,
       providesTags: ['Post'],
@@ -314,6 +319,7 @@ export const {
   useLikeCommentMutation,
   useAddReplyMutation,
   useLikeReplyMutation,
+  useGetUserPostsQuery,
 } = backendApi;
 
 export default backendApi;
