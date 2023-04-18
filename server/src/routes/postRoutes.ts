@@ -1,11 +1,20 @@
 import express from 'express';
-import { createPost, getPostLikes, getPosts, getSinglePost, likePost } from '../controllers/postController';
+import {
+  createPost,
+  getPostLikes,
+  getPosts,
+  getSinglePost,
+  getUserPosts,
+  likePost,
+} from '../controllers/postController';
 
 import { isAuth } from '../middleware/authMiddleware';
 
 const router = express.Router();
 
 router.get('/', getPosts);
+
+router.get('/user/:id', getUserPosts);
 
 router.get('/:id/likes', getPostLikes);
 

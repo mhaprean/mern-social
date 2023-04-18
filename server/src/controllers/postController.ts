@@ -83,3 +83,14 @@ export const likePost = async (req: Request<{ id: string }>, res: Response) => {
     return res.status(400).json(error);
   }
 };
+
+export const getUserPosts = async (req: Request<{ id: string }>, res: Response) => {
+  const userId = req.params.id;
+
+  try {
+    const posts = await Post.find({ user: userId }).populate('user').sort({ createdAt: -1 });
+    return res.status(200).json({ posts });
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
